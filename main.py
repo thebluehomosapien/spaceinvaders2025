@@ -13,7 +13,11 @@ OFFSET = 50
 GREY = (29, 29, 27)
 YELLOW = (244, 244, 63)
 
-
+font = pygame.font.Font("Font/monogram.ttf", 40)
+level_surface = font.render("LEVEL 01", False, YELLOW)
+game_over_surface = font.render("GAME OVER", False, YELLOW)
+score_text_surface = font.render("SCORE", False, YELLOW)
+highscore_text_surface = font.render("HIGH SCORE", False, YELLOW)
 
 screen = pygame.display.set_mode((SCREEN_WIDTH + OFFSET, SCREEN_HEIGHT + 2*OFFSET))
 pygame.display.set_caption("Python Space Invaders")
@@ -27,16 +31,6 @@ pygame.time.set_timer(SHOOT_LASER, 300)
 
 MYSTERYSHIP = pygame.USEREVENT + 1
 pygame.time.set_timer(MYSTERYSHIP, random.randint(4000, 8000))
-# spaceship = Spaceship(SCREEN_WIDTH, SCREEN_HEIGHT)
-# spaceship_group = pygame.sprite.GroupSingle()
-# spaceship_group.add(spaceship)
-
-# obstacle = Obstacle(100, 100)
-
-# laser = Laser((100, 100), 6, SCREEN_HEIGHT)
-# laser2 = Laser((100, 200), -6, SCREEN_HEIGHT)
-# lasers_group = pygame.sprite.Group()
-# lasers_group.add(laser, laser2)
 
 while True: 
     for event in pygame.event.get():
@@ -54,8 +48,6 @@ while True:
         if keys[pygame.K_SPACE] and game.run == False:
             game.reset()
     #Updating
-    # spaceship_group.update()
-    # lasers_group.update()
     if game.run:
         game.spaceship_group.update()
         game.move_aliens()
@@ -66,13 +58,30 @@ while True:
 
     #Drawing
     screen.fill(GREY)
+    #UI
     pygame.draw.rect(screen, YELLOW, (10, 10, 780, 780), 2, 0, 60, 60, 60, 60) # rect position and size, 2 = line thickness, 0 = no fill, and 60 60 60 60 as corner radii
     pygame.draw.line(screen, YELLOW, (25, 730), (775, 730), 3)
+
+    if game.run:
+        screen.blit(level_surface, (570, 740, 50, 50))
+    else:
+        screen.blit(game_over_surface, (570, 740, 50, 50))
+    
+    x = 50
+    for life in range(game.lives):
+        screen.blit(game.spaceship_group.sprite.image, (x, 745))
+        x += 50
+
+    screen.blit(score_text_surface, (50, 15, 50, 50))
+    formatted_score = str(game.score).zfill(5)
+    score_surface = font.render(formatted_score, False, YELLOW)
+    screen.blit(score_surface, (50, 40, 50, 50))
+    screen.blit(highscore_text_surface, (550, 15, 50, 50))
+    formatted_highscore = str(game.highscore).zfill(5)
+    highscore_surface = font.render(formatted_highscore, False, YELLOW)
+    screen.blit(highscore_surface, (625, 40, 50, 50))
+
     game.spaceship_group.draw(screen)
-    # spaceship_group.draw(screen)
-    # lasers_group.draw(screen)
-    # spaceship_group.sprite.lasers_group.draw(screen)
-    # obstacle.blocks_group.draw(screen)
     game.spaceship_group.sprite.lasers_group.draw(screen)
     for obstacle in game.obstacles:
         obstacle.blocks_group.draw(screen)
