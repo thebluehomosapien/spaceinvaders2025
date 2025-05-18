@@ -7,9 +7,12 @@ class Alien(pygame.sprite.Sprite):
         path = f"Graphics/alien_{type}.png"
         self.image = pygame.image.load(path)
         self.rect = self.image.get_rect(topleft = (x , y))
+        print(f"Loading: Graphics/alien_{type}.png")
+
     
     def update(self, direction):
         self.rect.x += direction
+        
 
 class MysteryShip(pygame.sprite.Sprite):
     def __init__(self, screen_width):

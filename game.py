@@ -44,7 +44,7 @@ class Game:
                 else:
                     alien_type = 1
 
-                alien = Alien(1, x , y)
+                alien = Alien(alien_type, x , y)
                 self.aliens_group.add(alien)
 
     def move_aliens(self):
@@ -81,3 +81,25 @@ class Game:
                     laser_sprite.kill()
                 if pygame.sprite.spritecollide(laser_sprite, self.mystery_ship_group, True):
                     laser_sprite.kill()
+
+            for obstacle in self.obstacles:
+                if pygame.sprite.spritecollide(laser_sprite, obstacle.blocks_group, True):
+                    laser_sprite.kill()
+        #alien lasers
+        if self.alien_lasers_group:
+            for laser_sprite in self.alien_lasers_group:
+                if pygame.sprite.spritecollide(laser_sprite, self.spaceship_group, False):
+                    laser_sprite.kill()
+                    print("Spaceship hit")
+            
+            for obstacle in self.obstacles:
+                if pygame.sprite.spritecollide(laser_sprite, obstacle.blocks_group, True):
+                    laser_sprite.kill()
+
+        if self.aliens_group:
+            for alien in self.aliens_group:
+                for obstacle in self.obstacles:
+                    pygame.sprite.spritecollide(alien, obstacle.blocks_group, True)
+
+                if pygame.sprite.spritecollide(alien, self.spaceship_group, False):
+                    print("Spaceship hit")
